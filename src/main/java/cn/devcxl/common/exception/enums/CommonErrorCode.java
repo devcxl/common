@@ -1,26 +1,38 @@
 package cn.devcxl.common.exception.enums;
 
 import cn.devcxl.common.exception.interfaces.ErrorCode;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author devcxl
  */
 public enum CommonErrorCode implements ErrorCode<CommonErrorCode> {
+
+
     /**
      * 错误的请求
      */
-    BAD_REQUEST(400, "Bad request"),
-    UNAUTHORIZED(401, "Unauthorized"),
-    FORBIDDEN(403, "Forbidden"),
-    NOT_FOUND(404, "Not Found"),
+    BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "BadRequest"),
 
+    /**
+     * 无权访问
+     */
+    FORBIDDEN(HttpStatus.FORBIDDEN.value(), "Forbidden"),
 
-    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
+    /**
+     * 没有找到
+     */
+    NOT_FOUND(HttpStatus.NOT_FOUND.value(), "NotFound"),
 
-    TOO_MANY_REQUESTS(429, "Too Many Requests"),
+    /**
+     * 请求超出
+     */
+    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS.value(), "TooManyRequests"),
 
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
-    ;
+    /**
+     * 未认证
+     */
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
 
     private int code;
     private String message;
@@ -37,6 +49,7 @@ public enum CommonErrorCode implements ErrorCode<CommonErrorCode> {
 
     @Override
     public String getMessage() {
+
         return this.message;
     }
 

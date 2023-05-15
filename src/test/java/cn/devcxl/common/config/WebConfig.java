@@ -1,4 +1,4 @@
-package cn.devcxl.common;
+package cn.devcxl.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,15 +12,14 @@ import javax.annotation.Resource;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Resource
-    private LimitInterceptorImpl limitInterceptor;
 
     @Resource
-    private AuthInterceptorImpl authInterceptor;
+    private CommonAuthInterceptorImpl authInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(limitInterceptor).addPathPatterns("/**");
         registry.addInterceptor(authInterceptor).addPathPatterns("/**");
     }
+
+
 }

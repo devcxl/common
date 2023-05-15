@@ -1,4 +1,4 @@
-package cn.devcxl.common;
+package cn.devcxl.common.base;
 
 import lombok.Data;
 
@@ -29,7 +29,6 @@ public class PageRequest {
      * @ignore
      */
     private Integer startIndex;
-
 
     public PageRequest() {
     }

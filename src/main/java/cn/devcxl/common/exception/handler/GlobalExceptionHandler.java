@@ -1,8 +1,10 @@
 package cn.devcxl.common.exception.handler;
 
-import cn.devcxl.common.Resp;
+import cn.devcxl.common.base.CommonResp;
 import cn.devcxl.common.exception.*;
+import cn.devcxl.common.exception.base.GlobalException;
 import cn.devcxl.common.exception.enums.CommonErrorCode;
+import cn.hutool.extra.servlet.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -12,9 +14,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.xml.bind.ValidationException;
+import javax.validation.ValidationException;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +26,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
 
     private static String getMessage(BindingResult ex) {
         return ex.getFieldErrors().stream().map(fieldError -> {
@@ -44,22 +46,28 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {BindException.class, ValidationException.class, MethodArgumentNotValidException.class})
-    public Resp<String> handleValidatedException(Exception e) {
+    public CommonResp<String> handleValidatedException(Exception e) {
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
             String message = getMessage(ex.getBindingResult());
-            return Resp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
+            return CommonResp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
         } else if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
             String message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
-            return Resp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
+            return CommonResp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
         } else if (e instanceof BindException) {
             BindException ex = (BindException) e;
 
             String message = getMessage(ex.getBindingResult());
-            return Resp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
+            return CommonResp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
         }
-        return Resp.fail(CommonErrorCode.BAD_REQUEST);
+
+//        List<ObjectError> errors =ex.getBindingResult().getAllErrors();
+//        StringBuffer errorMsg=new StringBuffer();
+//        errors.stream().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(";"));
+//        log.error("---MethodArgumentNotValidException Handler--- ERROR: {}", errorMsg.toString());
+//        result.setMsg(errorMsg.toString());
+        return CommonResp.fail(CommonErrorCode.BAD_REQUEST);
     }
 
     /**
@@ -68,10 +76,11 @@ public class GlobalExceptionHandler {
      * @param e
      * @return 错误信息
      */
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
-    public Resp<String> handlerClientException(BadRequestException e) {
+    public CommonResp<String> handlerClientException(BadRequestException e) {
         log.error("参数异常", e);
-        return Resp.fail(e.getErrorCode());
+        return CommonResp.fail(e.getErrorCode());
     }
 
     /**
@@ -82,9 +91,9 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenException.class)
-    public Resp<String> handlerClientException(ForbiddenException e) {
+    public CommonResp<String> handlerClientException(ForbiddenException e) {
         log.error("访问权限异常", e);
-        return Resp.fail(e.getErrorCode());
+        return CommonResp.fail(e.getErrorCode());
     }
 
 
@@ -96,9 +105,9 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public Resp<String> handlerClientException(NotFoundException e) {
+    public CommonResp<String> handlerClientException(NotFoundException e) {
         log.error("未找到异常", e);
-        return Resp.fail(e.getErrorCode());
+        return CommonResp.fail(e.getErrorCode());
     }
 
     /**
@@ -107,11 +116,13 @@ public class GlobalExceptionHandler {
      * @param e
      * @return 错误信息
      */
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
-    public Resp<String> handlerClientException(UnauthorizedException e) {
-        log.error("未认证异常", e);
-        return Resp.fail(e.getErrorCode());
+    public CommonResp<String> handlerClientException(UnauthorizedException e, HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        String ip = ServletUtil.getClientIP(request);
+        log.error("{}访问：{}未认证", ip, uri, e);
+        return CommonResp.fail(e.getErrorCode());
     }
 
     /**
@@ -122,22 +133,22 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(code = HttpStatus.TOO_MANY_REQUESTS)
     @ExceptionHandler(TooManyRequestsException.class)
-    public Resp<String> handlerClientException(TooManyRequestsException e) {
+    public CommonResp<String> handlerClientException(TooManyRequestsException e) {
         log.error("访问次数过多异常", e);
-        return Resp.fail(e.getErrorCode());
+        return CommonResp.fail(e.getErrorCode());
     }
 
     /**
-     * 运行时异常
+     * 业务异常
      *
      * @param e
      * @return
      */
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(RuntimeException.class)
-    public Resp<String> handler(RuntimeException e) {
-        log.error("运行时异常", e);
-        return Resp.fail(CommonErrorCode.INTERNAL_SERVER_ERROR.setMessage(e.getMessage()));
+    @ResponseStatus(code = HttpStatus.OK)
+    @ExceptionHandler(BusinessException.class)
+    public CommonResp<String> handler(GlobalException e) {
+        log.error("业务异常", e);
+        return CommonResp.fail(e.getErrorCode());
     }
 
 }

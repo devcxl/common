@@ -1,4 +1,4 @@
-package cn.devcxl.common;
+package cn.devcxl.common.base;
 
 import cn.devcxl.common.exception.BadRequestException;
 import cn.devcxl.common.exception.enums.CommonErrorCode;
@@ -45,7 +45,7 @@ public class PageResponse<T> {
         this.data = data;
         if (pageCount > 0) {
             if (pageIndex > pageCount) {
-                throw new BadRequestException(CommonErrorCode.BAD_REQUEST.setMessage("pageSize > pageCount"));
+                throw new BadRequestException(CommonErrorCode.BAD_REQUEST);
             }
         }
 

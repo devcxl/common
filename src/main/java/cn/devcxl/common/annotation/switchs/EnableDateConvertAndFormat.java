@@ -1,6 +1,6 @@
-package cn.devcxl.common.annotation;
+package cn.devcxl.common.annotation.switchs;
 
-import cn.devcxl.common.aop.WebLogAop;
+import cn.devcxl.common.config.LocalDateTimeConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -9,12 +9,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 开启@WebLog注解实现记录请求
- *
  * @author devcxl
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import(WebLogAop.class)
-public @interface EnableWebLog {
+@Import(LocalDateTimeConfig.class)
+public @interface EnableDateConvertAndFormat {
 }

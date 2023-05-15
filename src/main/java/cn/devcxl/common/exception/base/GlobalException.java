@@ -8,7 +8,7 @@ import cn.devcxl.common.exception.interfaces.ErrorCode;
  *
  * @author devcxl
  */
-public class GlobalException extends RuntimeException {
+public abstract class GlobalException extends RuntimeException {
 
     private ErrorCode<?> errorCode;
 

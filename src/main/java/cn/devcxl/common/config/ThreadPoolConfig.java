@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -40,6 +41,11 @@ public class ThreadPoolConfig {
         log.info("ThreadPoolTaskExecutor:[{}] core:{},max:{} queue:{}", poolNamePrefix, corePoolSize, maxPoolSize, queueCapacity);
     }
 
+    /**
+     * 线程池配置
+     *
+     * @return
+     */
     @Bean
     public ThreadPoolTaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor poolExecutor = new ThreadPoolTaskExecutor();
@@ -56,6 +62,30 @@ public class ThreadPoolConfig {
         // 线程名称前缀
         poolExecutor.setThreadNamePrefix(properties.getPoolNamePrefix());
         return poolExecutor;
+    }
+
+    /**
+     * 任务调度器配置
+     *
+     * @return
+     */
+    @Bean
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        // 核心线程数
+        threadPoolTaskScheduler.setPoolSize(properties.getCorePoolSize());
+        // 拒绝策略
+        threadPoolTaskScheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        // 线程前缀
+        threadPoolTaskScheduler.setThreadNamePrefix("Scheduled-");
+
+        //调度器shutdown被调用时等待当前被调度的任务完成
+        threadPoolTaskScheduler.setWaitForTasksToCompleteOnShutdown(true);
+        //等待时长
+        threadPoolTaskScheduler.setAwaitTerminationSeconds(60);
+
+        threadPoolTaskScheduler.initialize();
+        return threadPoolTaskScheduler;
     }
 
 

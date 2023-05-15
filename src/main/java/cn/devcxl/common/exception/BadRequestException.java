@@ -3,20 +3,23 @@ package cn.devcxl.common.exception;
 import cn.devcxl.common.exception.base.GlobalException;
 import cn.devcxl.common.exception.enums.CommonErrorCode;
 import cn.devcxl.common.exception.interfaces.ErrorCode;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
+ * 请求错误
+ *
  * @author devcxl
  */
-@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class BadRequestException extends GlobalException {
 
     public BadRequestException() {
         super(CommonErrorCode.BAD_REQUEST);
     }
 
-    public BadRequestException(ErrorCode<CommonErrorCode> errorCode) {
+    public BadRequestException(String message) {
+        super(CommonErrorCode.BAD_REQUEST.setMessage(message));
+    }
+
+    public BadRequestException(ErrorCode<?> errorCode) {
         super(errorCode);
     }
 }

@@ -2,6 +2,7 @@ package cn.devcxl.common.interceptor;
 
 import cn.devcxl.common.annotation.Limit;
 import cn.devcxl.common.exception.TooManyRequestsException;
+import cn.devcxl.common.exception.enums.CommonErrorCode;
 import cn.hutool.extra.servlet.ServletUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.method.HandlerMethod;
@@ -12,21 +13,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * 接口限流
  *
  * @author devcxl
  */
-public interface LimitInterceptor extends HandlerInterceptor {
-
-    String LIMIT_KEY_TEMPLATE = "limit_%s_%s";
-
+public class CommonLimitInterceptor implements HandlerInterceptor {
     /**
-     * 加载Redis
-     *
-     * @return RedisTemplate
+     * redisKey模板
      */
-    RedisTemplate<String, Integer> loadRedisTemplate();
+    private static final String LIMIT_KEY_TEMPLATE = "limit_%s_%s";
+
+    private RedisTemplate<String, Integer> redisTemplate;
+
+    public CommonLimitInterceptor(RedisTemplate<String, Integer> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     /**
      * 检查API限制
@@ -35,8 +38,7 @@ public interface LimitInterceptor extends HandlerInterceptor {
      * @param limitKey RedisKey
      * @return 是否拦截
      */
-    default boolean checkLimit(Limit limit, String limitKey) {
-        RedisTemplate<String, Integer> redisTemplate = loadRedisTemplate();
+    private boolean checkLimit(Limit limit, String limitKey) {
         int max = limit.max();
         int time = limit.time();
         TimeUnit timeUnit = limit.timeUnit();
@@ -50,7 +52,7 @@ public interface LimitInterceptor extends HandlerInterceptor {
                     redisTemplate.opsForValue().set(limitKey, ++count, time, timeUnit);
                 }
             } else {
-                throw new TooManyRequestsException();
+                throw new TooManyRequestsException(CommonErrorCode.TOO_MANY_REQUESTS.setMessage(limit.msg()));
             }
         } else {
             redisTemplate.opsForValue().set(limitKey, 1, time, timeUnit);
@@ -67,7 +69,7 @@ public interface LimitInterceptor extends HandlerInterceptor {
      * @return 是否拦截
      */
     @Override
-    default boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
@@ -75,6 +77,7 @@ public interface LimitInterceptor extends HandlerInterceptor {
             if (limit == null) {
                 return true;
             } else {
+                // 将请求路径和ip地址设为唯一标识 也可以自定义
                 String limitKey = String.format(
                         LIMIT_KEY_TEMPLATE,
                         request.getRequestURI(),

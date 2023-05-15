@@ -1,6 +1,6 @@
-package cn.devcxl.common.annotation;
+package cn.devcxl.common.annotation.switchs;
 
-import cn.devcxl.common.config.LocalDateTimeConfig;
+import cn.devcxl.common.config.RedisConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -10,9 +10,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author devcxl
+ * 开启Redis缓存服务, 自动配置Redis序列化  redisTemplate
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import(LocalDateTimeConfig.class)
-public @interface EnableDateConvertAndFormat {
+@Import(RedisConfig.class)
+public @interface EnableRedis {
+
 }

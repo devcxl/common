@@ -11,6 +11,12 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NoAuth {
+public @interface CommonAuth {
 
+    /**
+     * 权限标识
+     *
+     * @return
+     */
+    String value();
 }

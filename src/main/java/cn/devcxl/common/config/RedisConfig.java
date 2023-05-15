@@ -35,9 +35,8 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     @PostConstruct
     public void init() {
-        log.info("RedisConfig: init");
+        log.info("\uD83D\uDE00 Redis settings initialized successfully！");
     }
-
 
     /**
      * redisTemplate配置
@@ -49,10 +48,24 @@ public class RedisConfig extends CachingConfigurerSupport {
     public RedisTemplate<String, Object> redisTemplate(RedisSerializer<Object> redisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(lettuceConnectionFactory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(stringRedisSerializer);
         redisTemplate.setValueSerializer(redisSerializer);
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(stringRedisSerializer);
         redisTemplate.setHashValueSerializer(redisSerializer);
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> redisPublisherTemplate(RedisSerializer<Object> redisSerializer) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(stringRedisSerializer);
+        redisTemplate.setValueSerializer(stringRedisSerializer);
+        redisTemplate.setHashKeySerializer(stringRedisSerializer);
+        redisTemplate.setHashValueSerializer(stringRedisSerializer);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
@@ -67,28 +80,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(
-                LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.WRAPPER_ARRAY);
-        serializer.setObjectMapper(objectMapper);
-        return serializer;
-    }
-
-    /**
-     * redis 序列化配置
-     *
-     * @return
-     */
-    @Bean
-    public RedisSerializer<String> redisStringSerializer() {
-        Jackson2JsonRedisSerializer<String> serializer = new Jackson2JsonRedisSerializer<>(String.class);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(
-                LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.WRAPPER_ARRAY);
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
         serializer.setObjectMapper(objectMapper);
         return serializer;
     }
@@ -104,7 +96,8 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(lettuceConnectionFactory);
         //设置Redis缓存有效期为1天
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer)).entryTtl(Duration.ofDays(1));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
+                .entryTtl(Duration.ofDays(1));
         return new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
     }
 
