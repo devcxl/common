@@ -5,6 +5,7 @@ import cn.devcxl.common.annotation.CommonNoAuth;
 import cn.devcxl.common.exception.UnauthorizedException;
 import cn.devcxl.common.utils.JsonWebTokenUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -58,6 +59,8 @@ public abstract class CommonAuthInterceptor implements HandlerInterceptor {
                 return true;
             }
             String token = request.getHeader(TOKEN_NAME);
+
+
             if (StringUtils.hasLength(token)) {
                 if (jsonWebTokenUtils.validateToken(token)) {
                     // 权限认证

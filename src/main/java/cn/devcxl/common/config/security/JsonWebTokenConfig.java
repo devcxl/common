@@ -19,7 +19,7 @@ public class JsonWebTokenConfig {
     @Resource
     private SecurityProperties securityProperties;
 
-    public JWTSigner getJWTSigner() {
+    public JWTSigner getJsonWebTokenSigner() {
         String secret = securityProperties.getSecret();
         return JWTSignerUtil.hs256(secret.getBytes(StandardCharsets.UTF_8));
     }
