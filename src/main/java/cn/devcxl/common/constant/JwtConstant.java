@@ -5,6 +5,12 @@ package cn.devcxl.common.constant;
  */
 public class JwtConstant {
 
+
+    /**
+     * jwt 签发者标识
+     */
+    public static final String IIS = "iss";
+
     /**
      * jwt 过期时间标识
      */
@@ -13,7 +19,7 @@ public class JwtConstant {
     /**
      * jwt 用户名标识
      */
-    public static final String USERNAME = "username";
+    public static final String SUB = "sub";
 
     /**
      * 请求头token标识

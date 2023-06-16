@@ -13,14 +13,14 @@ import java.nio.charset.StandardCharsets;
  * @author devcxl
  */
 @Configuration
-@EnableConfigurationProperties(SecurityProperties.class)
+@EnableConfigurationProperties(SecurityJsonWebTokenProperties.class)
 public class JsonWebTokenConfig {
 
     @Resource
-    private SecurityProperties securityProperties;
+    private SecurityJsonWebTokenProperties securityJsonWebTokenProperties;
 
     public JWTSigner getJsonWebTokenSigner() {
-        String secret = securityProperties.getSecret();
+        String secret = securityJsonWebTokenProperties.getSecret();
         return JWTSignerUtil.hs256(secret.getBytes(StandardCharsets.UTF_8));
     }
 }

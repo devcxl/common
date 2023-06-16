@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties(prefix = "spring.security.jwt")
-public class SecurityProperties {
+public class SecurityJsonWebTokenProperties {
 
     /**
      * Token加密密钥
