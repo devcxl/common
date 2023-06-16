@@ -67,20 +67,16 @@
 
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-jwt</artifactId>
+            <artifactId>hutool-all</artifactId>
             <version>${hutools.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-crypto</artifactId>
-            <version>${hutools.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
             <artifactId>hutool-extra</artifactId>
             <version>${hutools.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
