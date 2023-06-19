@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "spring.security.ignore.urls")
+@ConfigurationProperties(prefix = "spring.security.ignore")
 public class SecurityIgnoreUrlsProperties {
     private List<String> urls = new ArrayList<>();
 
