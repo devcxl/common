@@ -85,7 +85,6 @@ public class JsonWebTokenUtils {
             Long exp = JWTUtil.parseToken(token).getPayloads().get(JwtConstant.EXPIRATION, Long.class);
             long currentTimeStamp = System.currentTimeMillis() / 1000L;
             if (exp > currentTimeStamp) {
-                // todo: 过期时间离当前时间还剩一小时时刷新token
                 if (exp - currentTimeStamp <= 3600) {
                     String username = getUserNameFromToken(token);
                     return generateToken(userDetailsService.loadUserByUsername(username));
