@@ -17,6 +17,11 @@ public class SecurityJsonWebTokenProperties {
     private String secret;
 
     /**
+     * token签发域名
+     */
+    private String iis;
+
+    /**
      * 请求头名称
      */
     private String headerName = JwtConstant.TOKEN_HEADER_NAME;

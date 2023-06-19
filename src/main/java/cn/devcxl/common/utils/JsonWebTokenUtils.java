@@ -24,61 +24,58 @@ public class JsonWebTokenUtils {
     private JsonWebTokenConfig jsonWebTokenConfig;
 
     @Resource
-    private JsonWebTokenUtils jsonWebTokenUtils;
-
-    @Resource
     private UserDetailsService userDetailsService;
 
     @Resource
     private SecurityJsonWebTokenProperties securityJsonWebTokenProperties;
 
+    /**
+     * 根据用户信息生成token
+     *
+     * @param userDetails
+     * @return
+     */
     public String generateToken(UserDetails userDetails) {
         String username = userDetails.getUsername();
         Map<String, Object> header = new HashMap<>();
-//        header.put(JwtConstant.IIS,);
-
+        header.put(JwtConstant.IIS, securityJsonWebTokenProperties.getIis());
         header.put(JwtConstant.SUB, username);
-
-        header.put(JwtConstant.EXPIRATION, System.currentTimeMillis() / 1000 + JwtConstant.DEFAULT_EXPIRATION);
-        return null;
+        header.put(JwtConstant.EXPIRATION, System.currentTimeMillis() / 1000 + securityJsonWebTokenProperties.getExpiration());
+        return JWTUtil.createToken(header, jsonWebTokenConfig.getJsonWebTokenSigner());
     }
 
+
+    /**
+     * 从Token中获取用户名
+     *
+     * @param authToken
+     * @return
+     */
     public String getUserNameFromToken(String authToken) {
         return JWTUtil.parseToken(authToken).getPayloads().get(JwtConstant.SUB, String.class);
     }
 
     /**
-     * 验证token是否有效&是否过期&自动刷新有效期
+     * 验证token是否有效&是否过期
      *
      * @param authToken
      * @return
      */
     public boolean validateToken(@NotBlank String authToken) {
-
         if (StringUtils.hasLength(authToken)) {
-            String jwtUsername = jsonWebTokenUtils.getUserNameFromToken(authToken);
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUsername);
-
             if (JWTUtil.verify(authToken, jsonWebTokenConfig.getJsonWebTokenSigner())) {
-
                 Long exp = JWTUtil.parseToken(authToken).getPayloads().get(JwtConstant.EXPIRATION, Long.class);
                 long currentTimeStamp = System.currentTimeMillis() / 1000L;
                 if (exp > currentTimeStamp) {
                     return true;
-
-
                 }
-
             }
         }
-
         return false;
     }
 
-
     /**
-     * 刷新token
+     * 刷新token有效期
      *
      * @param token
      * @return
@@ -89,16 +86,12 @@ public class JsonWebTokenUtils {
             long currentTimeStamp = System.currentTimeMillis() / 1000L;
             if (exp > currentTimeStamp) {
                 // todo: 过期时间离当前时间还剩一小时时刷新token
-
                 if (exp - currentTimeStamp <= 3600) {
-                    return
+                    String username = getUserNameFromToken(token);
+                    return generateToken(userDetailsService.loadUserByUsername(username));
                 }
-
-
-                return true;
             }
         }
-        // todo: 刷新token
         return token;
     }
 
