@@ -52,7 +52,7 @@ public class CommonLimitInterceptor implements HandlerInterceptor {
                     redisTemplate.opsForValue().set(limitKey, ++count, time, timeUnit);
                 }
             } else {
-                throw new TooManyRequestsException(CommonErrorCode.TOO_MANY_REQUESTS.setMessage(limit.msg()));
+                throw new TooManyRequestsException();
             }
         } else {
             redisTemplate.opsForValue().set(limitKey, 1, time, timeUnit);

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
+ * 通用返回结构体
+ *
  * @author devcxl
  */
 @Data
@@ -46,6 +48,11 @@ public class CommonResp<T> {
 
     public static <T> CommonResp<T> ok() {
         return new CommonResp<T>(200, null, "success");
+    }
+
+
+    public static <T> CommonResp<T> fail(int code, String msg) {
+        return new CommonResp<T>(code, null, msg);
     }
 
     public static <T> CommonResp<T> fail(ErrorCode<?> errorCode) {

@@ -53,11 +53,4 @@ public enum CommonErrorCode implements ErrorCode<CommonErrorCode> {
         return this.message;
     }
 
-    @Override
-    public CommonErrorCode setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-
 }

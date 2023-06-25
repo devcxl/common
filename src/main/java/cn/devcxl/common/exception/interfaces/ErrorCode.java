@@ -12,7 +12,6 @@ package cn.devcxl.common.exception.interfaces;
  * @author devcxl
  */
 public interface ErrorCode<T> {
-
     /**
      * 获取错误码
      *
@@ -26,14 +25,4 @@ public interface ErrorCode<T> {
      * @return 错误信息
      */
     String getMessage();
-
-    /**
-     * 设置错误消息
-     *
-     * @param message 错误信息
-     * @return impl self
-     */
-    T setMessage(String message);
-
-
 }

@@ -50,16 +50,15 @@ public class GlobalExceptionHandler {
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
             String message = getMessage(ex.getBindingResult());
-            return CommonResp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
+            return CommonResp.fail(400,message);
         } else if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
             String message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
-            return CommonResp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
+            return CommonResp.fail(400,message);
         } else if (e instanceof BindException) {
             BindException ex = (BindException) e;
-
             String message = getMessage(ex.getBindingResult());
-            return CommonResp.fail(CommonErrorCode.BAD_REQUEST.setMessage(message));
+            return CommonResp.fail(400,message);
         }
 
 //        List<ObjectError> errors =ex.getBindingResult().getAllErrors();

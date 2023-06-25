@@ -15,10 +15,6 @@ public class BadRequestException extends GlobalException {
         super(CommonErrorCode.BAD_REQUEST);
     }
 
-    public BadRequestException(String message) {
-        super(CommonErrorCode.BAD_REQUEST.setMessage(message));
-    }
-
     public BadRequestException(ErrorCode<?> errorCode) {
         super(errorCode);
     }
