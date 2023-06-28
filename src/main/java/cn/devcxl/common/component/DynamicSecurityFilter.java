@@ -2,6 +2,7 @@ package cn.devcxl.common.component;
 
 
 import cn.devcxl.common.config.security.SecurityIgnoreUrlsProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
@@ -20,6 +21,7 @@ import java.io.IOException;
  *
  * @author devcxl
  */
+@EnableConfigurationProperties(SecurityIgnoreUrlsProperties.class)
 public class DynamicSecurityFilter extends AbstractSecurityInterceptor implements Filter {
 
     @Resource
