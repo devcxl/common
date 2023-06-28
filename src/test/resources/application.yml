@@ -14,8 +14,8 @@ spring:
             expiration: 31536000 # 测试Token有效期一年
         ignore:
             urls:
-                - "/**/**"
-                - "/**"
+                - "/login"
+                - "/register"
     datasource:
         url: jdbc:h2:mem:db
         driverClassName: org.h2.Driver
