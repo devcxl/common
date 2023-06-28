@@ -1,2 +1,33 @@
 server:
     port: 8899
+    error:
+        whitelabel:
+            enabled: true
+# @EnableSecurityConfig
+spring:
+    profiles:
+        active: dev
+    security:
+        jwt:
+            secret: 123456789
+            iis: 123.abc.com
+            expiration: 31536000 # 测试Token有效期一年
+        ignore:
+            urls:
+                - "/**/**"
+                - "/**"
+    datasource:
+        url: jdbc:h2:mem:db
+        driverClassName: org.h2.Driver
+        username: sa
+        password: 123456
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        database: h2
+        generate-ddl: true
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+    h2:
+        console:
+            enabled: true
