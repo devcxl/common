@@ -29,15 +29,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Resource
-    private JsonWebTokenConfig jsonWebTokenConfig;
-    
-    @Resource
     private SecurityJsonWebTokenProperties securityJsonWebTokenProperties;
-    
-    
+
     @Resource
     private JsonWebTokenUtils jsonWebTokenUtils;
-    
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
