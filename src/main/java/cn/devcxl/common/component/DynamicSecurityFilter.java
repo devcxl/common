@@ -2,12 +2,14 @@ package cn.devcxl.common.component;
 
 
 import cn.devcxl.common.config.security.SecurityIgnoreUrlsProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
@@ -21,7 +23,8 @@ import java.io.IOException;
  *
  * @author devcxl
  */
-@EnableConfigurationProperties(SecurityIgnoreUrlsProperties.class)
+@Component
+@ConditionalOnBean(name = "dynamicSecurityService")
 public class DynamicSecurityFilter extends AbstractSecurityInterceptor implements Filter {
 
     @Resource

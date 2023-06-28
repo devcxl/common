@@ -2,12 +2,14 @@ package cn.devcxl.common.component;
 
 
 import cn.hutool.core.collection.CollUtil;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,6 +19,8 @@ import java.util.Iterator;
  *
  * @author devcxl
  */
+@Component
+@ConditionalOnBean(name = "dynamicSecurityService")
 public class DynamicAccessDecisionManager implements AccessDecisionManager {
 
     @Override
