@@ -2,6 +2,7 @@ package cn.devcxl.common.annotation.switchs;
 
 import cn.devcxl.common.config.security.JsonWebTokenConfig;
 import cn.devcxl.common.config.security.SecurityIgnoreUrlsProperties;
+import cn.devcxl.common.config.security.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.utils.JsonWebTokenUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,6 +20,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @ComponentScan("cn.devcxl.common.component")
 @Import({JsonWebTokenConfig.class, JsonWebTokenUtils.class})
-@EnableConfigurationProperties(SecurityIgnoreUrlsProperties.class)
+@EnableConfigurationProperties({SecurityIgnoreUrlsProperties.class, SecurityJsonWebTokenProperties.class})
 public @interface EnableSecurityConfig {
 }
