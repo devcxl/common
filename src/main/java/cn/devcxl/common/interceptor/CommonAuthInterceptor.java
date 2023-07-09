@@ -2,10 +2,10 @@ package cn.devcxl.common.interceptor;
 
 import cn.devcxl.common.annotation.CommonAuth;
 import cn.devcxl.common.annotation.CommonNoAuth;
-import cn.devcxl.common.exception.UnauthorizedException;
+import cn.devcxl.common.exception.CommonException;
+import cn.devcxl.common.exception.enums.CommonErrorCode;
 import cn.devcxl.common.utils.JsonWebTokenUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -71,10 +71,10 @@ public abstract class CommonAuthInterceptor implements HandlerInterceptor {
                         return true;
                     }
                 } else {
-                    throw new UnauthorizedException();
+                    throw new CommonException(CommonErrorCode.UNAUTHORIZED);
                 }
             }
-            throw new UnauthorizedException();
+            throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         } else {
             return false;
         }

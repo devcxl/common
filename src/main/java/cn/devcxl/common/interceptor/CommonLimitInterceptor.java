@@ -1,7 +1,7 @@
 package cn.devcxl.common.interceptor;
 
 import cn.devcxl.common.annotation.Limit;
-import cn.devcxl.common.exception.TooManyRequestsException;
+import cn.devcxl.common.exception.CommonException;
 import cn.devcxl.common.exception.enums.CommonErrorCode;
 import cn.hutool.extra.servlet.ServletUtil;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -52,7 +52,7 @@ public class CommonLimitInterceptor implements HandlerInterceptor {
                     redisTemplate.opsForValue().set(limitKey, ++count, time, timeUnit);
                 }
             } else {
-                throw new TooManyRequestsException();
+                throw new CommonException(CommonErrorCode.TOO_MANY_REQUESTS);
             }
         } else {
             redisTemplate.opsForValue().set(limitKey, 1, time, timeUnit);

@@ -1,6 +1,6 @@
 package cn.devcxl.common.base;
 
-import cn.devcxl.common.exception.BadRequestException;
+import cn.devcxl.common.exception.CommonException;
 import cn.devcxl.common.exception.enums.CommonErrorCode;
 import lombok.Data;
 
@@ -45,7 +45,7 @@ public class PageResponse<T> {
         this.data = data;
         if (pageCount > 0) {
             if (pageIndex > pageCount) {
-                throw new BadRequestException(CommonErrorCode.BAD_REQUEST);
+                throw new CommonException(CommonErrorCode.BAD_REQUEST);
             }
         }
 
