@@ -43,16 +43,20 @@ public class CommonResp<T> {
     }
 
     public static <T> CommonResp<T> ok(T data) {
-        return new CommonResp<T>(200, data, "success");
+        return new CommonResp<T>(1000, data, "success");
     }
 
     public static <T> CommonResp<T> ok() {
-        return new CommonResp<T>(200, null, "success");
+        return new CommonResp<T>(1000, null, "success");
     }
 
 
     public static <T> CommonResp<T> fail(int code, String msg) {
         return new CommonResp<T>(code, null, msg);
+    }
+
+    public static <T> CommonResp<T> fail(ErrorCode<?> errorCode, String msg) {
+        return new CommonResp<T>(errorCode.getCode(), null, msg);
     }
 
     public static <T> CommonResp<T> fail(ErrorCode<?> errorCode) {
