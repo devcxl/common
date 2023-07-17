@@ -12,27 +12,27 @@ public enum CommonErrorCode implements ErrorCode<CommonErrorCode> {
     /**
      * 错误的请求
      */
-    BAD_REQUEST(HttpStatus.BAD_REQUEST.value() * 10, "BadRequest"),
+    BAD_REQUEST(1001, "BadRequest"),
 
     /**
      * 无权访问
      */
-    FORBIDDEN(HttpStatus.FORBIDDEN.value() * 10, "Forbidden"),
+    FORBIDDEN(1002, "Forbidden"),
 
     /**
      * 没有找到
      */
-    NOT_FOUND(HttpStatus.NOT_FOUND.value() * 10, "NotFound"),
+    NOT_FOUND(1003, "NotFound"),
 
     /**
      * 请求超出
      */
-    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS.value() * 10, "TooManyRequests"),
+    TOO_MANY_REQUESTS(1004, "TooManyRequests"),
 
     /**
      * 未认证
      */
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED.value() * 10, "Unauthorized");
+    UNAUTHORIZED(1005, "Unauthorized");
 
     private int code;
     private String message;
