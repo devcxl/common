@@ -3,7 +3,9 @@ package cn.devcxl.common.utils;
 import cn.devcxl.common.config.security.JsonWebTokenConfig;
 import cn.devcxl.common.config.security.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.constant.JwtConstant;
+import cn.hutool.jwt.JWTException;
 import cn.hutool.jwt.JWTUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import java.util.Map;
 /**
  * @author devcxl
  */
+@Slf4j
 @Component
 public class JsonWebTokenUtils {
 
@@ -63,12 +66,17 @@ public class JsonWebTokenUtils {
      */
     public boolean validateToken(@NotBlank String authToken) {
         if (StringUtils.hasLength(authToken)) {
-            if (JWTUtil.verify(authToken, jsonWebTokenConfig.getJsonWebTokenSigner())) {
-                Long exp = JWTUtil.parseToken(authToken).getPayloads().get(JwtConstant.EXPIRATION, Long.class);
-                long currentTimeStamp = System.currentTimeMillis() / 1000L;
-                if (exp > currentTimeStamp) {
-                    return true;
+            try {
+                if (JWTUtil.verify(authToken, jsonWebTokenConfig.getJsonWebTokenSigner())) {
+                    Long exp = JWTUtil.parseToken(authToken).getPayloads().get(JwtConstant.EXPIRATION, Long.class);
+                    long currentTimeStamp = System.currentTimeMillis() / 1000L;
+                    if (exp > currentTimeStamp) {
+                        return true;
+                    }
                 }
+            } catch (JWTException exception) {
+                log.error("JWT验证失败:{}", exception.getMessage());
+                return false;
             }
         }
         return false;
