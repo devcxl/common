@@ -2,7 +2,6 @@ package cn.devcxl.common.exception.handler;
 
 import cn.devcxl.common.base.CommonResp;
 import cn.devcxl.common.exception.*;
-import cn.devcxl.common.exception.base.GlobalException;
 import cn.devcxl.common.exception.enums.CommonErrorCode;
 import cn.devcxl.common.exception.interfaces.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
@@ -49,15 +49,15 @@ public class GlobalExceptionHandler {
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
             String message = getMessage(ex.getBindingResult());
-            return CommonResp.fail(400, message);
+            return CommonResp.fail(CommonErrorCode.BAD_REQUEST, message);
         } else if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
             String message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
-            return CommonResp.fail(400, message);
+            return CommonResp.fail(CommonErrorCode.BAD_REQUEST, message);
         } else if (e instanceof BindException) {
             BindException ex = (BindException) e;
             String message = getMessage(ex.getBindingResult());
-            return CommonResp.fail(400, message);
+            return CommonResp.fail(CommonErrorCode.BAD_REQUEST, message);
         }
 
 //        List<ObjectError> errors =ex.getBindingResult().getAllErrors();
@@ -76,9 +76,9 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(code = HttpStatus.OK)
     @ExceptionHandler(value = CommonException.class)
-    public CommonResp<ErrorCode<?>> handle(CommonException e) {
+    public CommonResp<ErrorCode<?>> handle(CommonException e, HttpServletRequest request) {
         ErrorCode<?> errorCode = e.getErrorCode();
-        log.error("请求异常CODE{},MESSAGE:{}", errorCode.getCode(), errorCode.getMessage());
+        log.error("请求异常[{}],code:{},message:{}", request.getRequestURI(), errorCode.getCode(), errorCode.getMessage());
         return CommonResp.fail(e.getErrorCode());
     }
 
