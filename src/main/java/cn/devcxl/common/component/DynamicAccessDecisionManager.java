@@ -2,6 +2,7 @@ package cn.devcxl.common.component;
 
 
 import cn.hutool.core.collection.CollUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,6 +20,7 @@ import java.util.Iterator;
  *
  * @author devcxl
  */
+@Slf4j
 @Component
 @ConditionalOnBean(name = "dynamicSecurityService")
 public class DynamicAccessDecisionManager implements AccessDecisionManager {
@@ -26,6 +28,7 @@ public class DynamicAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object object,
                        Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+        log.info("decide:{},{},{}", authentication, object, configAttributes);
         // 当接口未被配置资源时直接放行
         if (CollUtil.isEmpty(configAttributes)) {
             return;

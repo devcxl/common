@@ -1,6 +1,7 @@
 package cn.devcxl.common.component;
 
 import cn.hutool.core.util.URLUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
@@ -18,6 +19,7 @@ import java.util.*;
  *
  * @author devcxl
  */
+@Slf4j
 @Component
 @ConditionalOnBean(name = "dynamicSecurityService")
 public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
@@ -38,8 +40,11 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
-        if (configAttributeMap == null) this.loadDataSource();
-        List<ConfigAttribute>  configAttributes = new ArrayList<>();
+        if (configAttributeMap == null || configAttributeMap.isEmpty()) {
+            log.info("loadDataSource");
+            this.loadDataSource();
+        }
+        List<ConfigAttribute> configAttributes = new ArrayList<>();
         //获取当前访问的路径
         String url = ((FilterInvocation) o).getRequestUrl();
         String path = URLUtil.getPath(url);
@@ -49,6 +54,7 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
         while (iterator.hasNext()) {
             String pattern = iterator.next();
             if (pathMatcher.match(pattern, path)) {
+                log.info("configAttributeMap:add{}", pattern);
                 configAttributes.add(configAttributeMap.get(pattern));
             }
         }
@@ -58,7 +64,13 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
 
     @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
-        return null;
+        List<ConfigAttribute> configAttributes = new ArrayList<>();
+        Iterator<String> iterator = configAttributeMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String pattern = iterator.next();
+            configAttributes.add(configAttributeMap.get(pattern));
+        }
+        return configAttributes;
     }
 
     @Override
