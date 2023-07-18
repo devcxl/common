@@ -41,21 +41,27 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         if (configAttributeMap == null || configAttributeMap.isEmpty()) {
-            log.info("loadDataSource");
             this.loadDataSource();
         }
         List<ConfigAttribute> configAttributes = new ArrayList<>();
         //获取当前访问的路径
         String url = ((FilterInvocation) o).getRequestUrl();
+        String requestMethod = ((FilterInvocation) o).getRequest().getMethod();
         String path = URLUtil.getPath(url);
         PathMatcher pathMatcher = new AntPathMatcher();
+        log.debug("访问地址: {} {}", requestMethod, url);
         Iterator<String> iterator = configAttributeMap.keySet().iterator();
         //获取访问该路径所需资源
         while (iterator.hasNext()) {
-            String pattern = iterator.next();
-            if (pathMatcher.match(pattern, path)) {
-                log.info("configAttributeMap:add{}", pattern);
-                configAttributes.add(configAttributeMap.get(pattern));
+            String key = iterator.next();
+            String[] split = key.split("#");
+            String pattern = split[1];
+            String method = split[0];
+
+            if (pathMatcher.match(pattern, path) && method.equals(requestMethod)) {
+                ConfigAttribute configAttribute = configAttributeMap.get(key);
+                log.debug("匹配成功:{}, {}", pattern, configAttribute);
+                configAttributes.add(configAttribute);
             }
         }
         // 未设置操作请求权限，返回空集合
@@ -64,13 +70,7 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
 
     @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
-        List<ConfigAttribute> configAttributes = new ArrayList<>();
-        Iterator<String> iterator = configAttributeMap.keySet().iterator();
-        while (iterator.hasNext()) {
-            String pattern = iterator.next();
-            configAttributes.add(configAttributeMap.get(pattern));
-        }
-        return configAttributes;
+        return null;
     }
 
     @Override

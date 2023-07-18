@@ -1,6 +1,5 @@
 package cn.devcxl.common.component;
 
-import cn.devcxl.common.config.security.JsonWebTokenConfig;
 import cn.devcxl.common.config.security.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.utils.JsonWebTokenUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +51,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    log.info("authenticated user:{}", username);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.debug("authenticated user:{}", username);
                 }
             }
         }

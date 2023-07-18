@@ -4,9 +4,7 @@ package cn.devcxl.common.component;
 import cn.devcxl.common.config.security.SecurityIgnoreUrlsProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +61,7 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
         }
         //此处会调用AccessDecisionManager中的decide方法进行鉴权操作
         InterceptorStatusToken token = super.beforeInvocation(fi);
-        log.info("token:{}", token);
+        log.debug(token != null ? "访问有限制" : "公开访问");
         try {
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
         } finally {
