@@ -46,13 +46,16 @@ public class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {BindException.class, ValidationException.class, MethodArgumentNotValidException.class})
     public CommonResp<String> handleValidatedException(Exception e) {
+
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException ex = (MethodArgumentNotValidException) e;
             String message = getMessage(ex.getBindingResult());
             return CommonResp.fail(CommonErrorCode.BAD_REQUEST, message);
         } else if (e instanceof ConstraintViolationException) {
             ConstraintViolationException ex = (ConstraintViolationException) e;
-            String message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining("; "));
+            String message = ex.getConstraintViolations().stream()
+                    .map( cv -> cv == null ? "null" : cv.getPropertyPath() + " " + cv.getMessage() )
+                    .collect( Collectors.joining( ", " ) );
             return CommonResp.fail(CommonErrorCode.BAD_REQUEST, message);
         } else if (e instanceof BindException) {
             BindException ex = (BindException) e;
