@@ -18,10 +18,6 @@ public class CommonResp<T> {
      */
     private Integer code;
     /**
-     * 错误信息
-     */
-    private ErrorInfo error;
-    /**
      * 返回数据
      */
     private T data;
@@ -43,11 +39,11 @@ public class CommonResp<T> {
     }
 
     public static <T> CommonResp<T> ok(T data) {
-        return new CommonResp<T>(1000, data, "success");
+        return new CommonResp<T>(0, data, "success");
     }
 
     public static <T> CommonResp<T> ok() {
-        return new CommonResp<T>(1000, null, "success");
+        return new CommonResp<T>(0, null, "success");
     }
 
 
@@ -62,11 +58,5 @@ public class CommonResp<T> {
     public static <T> CommonResp<T> fail(ErrorCode<?> errorCode) {
         return new CommonResp<T>(errorCode.getCode(), null, errorCode.getMessage());
     }
-
-    static class ErrorInfo {
-        private Integer code;
-        private String msg;
-    }
-
 
 }
