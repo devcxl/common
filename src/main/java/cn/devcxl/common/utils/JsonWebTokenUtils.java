@@ -74,7 +74,7 @@ public class JsonWebTokenUtils {
                         return true;
                     }
                 }
-            } catch (JWTException exception) {
+            } catch (Exception exception) {
                 log.error("JWT验证失败:{}", exception.getMessage());
                 return false;
             }
