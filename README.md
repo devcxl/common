@@ -9,3 +9,28 @@
 - `@EnableSecurityConfig` 开启SpringSecurity
 - `@DistributedLock` 基于Redis的分布式锁
 - `@Limit` 基于Redis的接口限流
+
+
+## LocalDateTime 序列化为 TImeStamp
+
+配置文件`application.yml`中添加配置
+
+```yml
+spring:
+  common:
+    date2timestamp: true
+```
+
+## token 认证
+
+application.yml 配置
+
+```yml
+spring:
+  security:
+    jwt:
+      secret: xxxxxxxxxxxxxxxxxxxxxx
+  redis:
+    host: 127.0.0.1
+    port: 6379
+```
