@@ -1,5 +1,6 @@
 package cn.devcxl.common.config.security;
 
+import cn.devcxl.common.config.properties.SecurityJsonWebTokenProperties;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import org.springframework.context.annotation.Configuration;

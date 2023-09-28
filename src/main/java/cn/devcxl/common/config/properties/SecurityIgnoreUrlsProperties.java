@@ -1,4 +1,4 @@
-package cn.devcxl.common.config.security;
+package cn.devcxl.common.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;

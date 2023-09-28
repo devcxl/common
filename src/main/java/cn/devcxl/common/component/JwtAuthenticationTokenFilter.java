@@ -1,6 +1,6 @@
 package cn.devcxl.common.component;
 
-import cn.devcxl.common.config.security.SecurityJsonWebTokenProperties;
+import cn.devcxl.common.config.properties.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.utils.JsonWebTokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,7 +1,7 @@
 package cn.devcxl.common.component;
 
 
-import cn.devcxl.common.config.security.SecurityIgnoreUrlsProperties;
+import cn.devcxl.common.config.properties.SecurityIgnoreUrlsProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.http.HttpMethod;

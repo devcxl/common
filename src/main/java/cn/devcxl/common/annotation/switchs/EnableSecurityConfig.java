@@ -1,8 +1,8 @@
 package cn.devcxl.common.annotation.switchs;
 
+import cn.devcxl.common.config.properties.SecurityIgnoreUrlsProperties;
+import cn.devcxl.common.config.properties.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.config.security.JsonWebTokenConfig;
-import cn.devcxl.common.config.security.SecurityIgnoreUrlsProperties;
-import cn.devcxl.common.config.security.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.utils.JsonWebTokenUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;

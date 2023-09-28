@@ -1,4 +1,4 @@
-package cn.devcxl.common.config.security;
+package cn.devcxl.common.config.properties;
 
 import cn.devcxl.common.constant.JwtConstant;
 import lombok.Data;

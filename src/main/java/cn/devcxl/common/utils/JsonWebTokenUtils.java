@@ -1,9 +1,8 @@
 package cn.devcxl.common.utils;
 
+import cn.devcxl.common.config.properties.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.config.security.JsonWebTokenConfig;
-import cn.devcxl.common.config.security.SecurityJsonWebTokenProperties;
 import cn.devcxl.common.constant.JwtConstant;
-import cn.hutool.jwt.JWTException;
 import cn.hutool.jwt.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
