@@ -13,7 +13,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>2.7.13</spring-boot.version>
-        <hutools.version>5.8.17</hutools.version>
+        <hutools.version>5.8.25</hutools.version>
         <shardingsphere.version>5.0.0</shardingsphere.version>
         <mybatis.starter.version>2.3.0</mybatis.starter.version>
         <druid.starter.version>1.2.18</druid.starter.version>
