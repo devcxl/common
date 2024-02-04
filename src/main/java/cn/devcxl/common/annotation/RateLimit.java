@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Limit {
+public @interface RateLimit {
     /**
      * 次数
      *

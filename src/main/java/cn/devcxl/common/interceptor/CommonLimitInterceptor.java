@@ -1,8 +1,9 @@
 package cn.devcxl.common.interceptor;
 
-import cn.devcxl.common.annotation.Limit;
+import cn.devcxl.common.annotation.RateLimit;
 import cn.devcxl.common.exception.CommonException;
 import cn.devcxl.common.exception.enums.CommonErrorCode;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.method.HandlerMethod;
@@ -23,7 +24,7 @@ public class CommonLimitInterceptor implements HandlerInterceptor {
     /**
      * redisKey模板
      */
-    private static final String LIMIT_KEY_TEMPLATE = "limit_%s_%s";
+    private static final String LIMIT_KEY_TEMPLATE = "limit_%s_%d";
 
     private RedisTemplate<String, Integer> redisTemplate;
 
@@ -34,14 +35,14 @@ public class CommonLimitInterceptor implements HandlerInterceptor {
     /**
      * 检查API限制
      *
-     * @param limit    注解
+     * @param rateLimit    注解
      * @param limitKey RedisKey
      * @return 是否拦截
      */
-    private boolean checkLimit(Limit limit, String limitKey) {
-        int max = limit.max();
-        int time = limit.time();
-        TimeUnit timeUnit = limit.timeUnit();
+    private boolean checkLimit(RateLimit rateLimit, String limitKey) {
+        int max = rateLimit.max();
+        int time = rateLimit.time();
+        TimeUnit timeUnit = rateLimit.timeUnit();
         Integer count = redisTemplate.opsForValue().get(limitKey);
         if (count != null) {
             if (count < max) {
@@ -73,17 +74,17 @@ public class CommonLimitInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
-            Limit limit = method.getAnnotation(Limit.class);
-            if (limit == null) {
+            RateLimit rateLimit = method.getAnnotation(RateLimit.class);
+            if (rateLimit == null) {
                 return true;
             } else {
                 // 将请求路径和ip地址设为唯一标识 也可以自定义
                 String limitKey = String.format(
                         LIMIT_KEY_TEMPLATE,
                         request.getRequestURI(),
-                        ServletUtil.getClientIP(request)
+                        NetUtil.ipv4ToLong(ServletUtil.getClientIP(request))
                 );
-                return checkLimit(limit, limitKey);
+                return checkLimit(rateLimit, limitKey);
             }
         } else {
             return false;
